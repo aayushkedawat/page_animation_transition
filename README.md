@@ -45,7 +45,7 @@ MaterialApp widget like below and in switch cases you can transition to your new
 onGenerateRoute: (settings) {
     switch (settings.name) {
       case '/pageTwo':
-        return PageTransition(child: PageTwo(), type: LeftToRightFadedTransition());
+        return PageTransition(child: PageTwo(), pageAnimationType: LeftToRightFadedTransition());
         break;
       default:
         return null;

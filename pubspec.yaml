@@ -1,6 +1,6 @@
 name: page_animation_transition
 description: Using this package, you can add beautiful page transitions to your application.
-version: 0.0.6
+version: 0.0.7
 repository: https://github.com/aayushkedawat/page_animation_transition
 
 environment:

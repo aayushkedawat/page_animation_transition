@@ -9,3 +9,7 @@
 ## 0.0.6
 
 * Updated code
+
+## 0.0.7
+
+* Updated Readme
