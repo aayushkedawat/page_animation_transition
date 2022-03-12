@@ -13,3 +13,7 @@
 ## 0.0.7
 
 * Updated Readme
+
+## 0.0.8
+
+* Added example
