@@ -21,3 +21,7 @@
 ## 0.0.9
 
 * Updated Readme
+
+## 1.0.0
+
+* Added Documentation

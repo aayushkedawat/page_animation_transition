@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:page_animation_transition/page_animation_interface.dart';
 
+/// Left to Right transition
 class LeftToRightTransition implements PageAnimationInterface {
   @override
   Widget animate(BuildContext context, Animation<double> animation,

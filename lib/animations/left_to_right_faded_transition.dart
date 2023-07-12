@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:page_animation_transition/page_animation_interface.dart';
 
+/// Left to Right faded transition
 class LeftToRightFadedTransition implements PageAnimationInterface {
   @override
   Widget animate(BuildContext context, Animation<double> animation,

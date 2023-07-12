@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:page_animation_transition/page_animation_interface.dart';
 
+/// Bottom to top faded transition
 class BottomToTopFadedTransition implements PageAnimationInterface {
   @override
   Widget animate(BuildContext context, Animation<double> animation,
