@@ -18,7 +18,7 @@ This file provides guidance for AI assistants working with the `page_animation_t
 ```
 page_animation_transition/
 ├── lib/                                    # Published package source
-│   ├── page_animation_transition.dart     # Main widget (entry point)
+│   ├── page_animation_transition.dart     # Main widget (NOT a barrel file)
 │   ├── page_animation_interface.dart      # Abstract interface
 │   └── animations/                        # 11 animation implementations
 │       ├── bottom_to_top_transition.dart
@@ -29,7 +29,7 @@ page_animation_transition/
 │       ├── scale_animation_transition.dart
 │       ├── rotate_animation_transition.dart
 │       ├── bottom_to_top_faded_transition.dart
-│       ├── top_to_bottom_faded.dart
+│       ├── top_to_bottom_faded.dart          # ⚠ intentionally missing _transition suffix
 │       ├── left_to_right_faded_transition.dart
 │       └── right_to_left_faded_transition.dart
 ├── example/                                # Runnable Flutter demo app
@@ -38,7 +38,7 @@ page_animation_transition/
 │   │   ├── page_one.dart                  # Demo page with all 11 transitions
 │   │   └── page_two.dart                  # Destination page
 │   └── test/
-│       └── widget_test.dart               # Basic smoke test
+│       └── widget_test.dart               # Placeholder — does NOT test animations
 ├── pubspec.yaml                           # Package metadata & dependencies
 ├── pubspec.lock                           # Locked dependency versions
 ├── CHANGELOG.md                           # Version history
@@ -58,11 +58,16 @@ All animation types implement the `PageAnimationInterface` abstract class:
 ```dart
 // lib/page_animation_interface.dart
 abstract class PageAnimationInterface {
-  Widget animate(Animation<double> animation, Animation<double> secondaryAnimation, Widget child);
+  Widget animate(
+    BuildContext context,                  // ← always the first parameter
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child,
+  );
 }
 ```
 
-The main widget delegates to the interface:
+The main widget overrides `buildTransitions` and delegates to the interface:
 
 ```dart
 // lib/page_animation_transition.dart
@@ -71,40 +76,120 @@ class PageAnimationTransition extends PageRouteBuilder {
   final PageAnimationInterface pageAnimationType;
 
   PageAnimationTransition({required this.page, required this.pageAnimationType})
-      : super(
-          pageBuilder: (_, __, ___) => page,
-          transitionsBuilder: (context, animation, secondaryAnimation, child) =>
-              pageAnimationType.animate(animation, secondaryAnimation, child),
-        );
+      : super(pageBuilder: (context, animation, secondaryAnimation) => page);
+
+  @override
+  Widget buildTransitions(BuildContext context, Animation<double> animation,
+      Animation<double> secondaryAnimation, Widget child) {
+    return pageAnimationType.animate(context, animation, secondaryAnimation, child);
+  }
 }
 ```
 
+### Import Pattern
+
+There is **no barrel file**. Consumers import each animation directly from its path:
+
+```dart
+import 'package:page_animation_transition/page_animation_transition.dart';
+import 'package:page_animation_transition/animations/bottom_to_top_transition.dart';
+```
+
+See `example/lib/page_one.dart` for a full list of working import statements.
+
+### Concrete Animation Example
+
+Here is `BottomToTopTransition` — the simplest slide implementation, use it as a template:
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:page_animation_transition/page_animation_interface.dart';
+
+class BottomToTopTransition implements PageAnimationInterface {
+  @override
+  Widget animate(BuildContext context, Animation<double> animation,
+      Animation<double> secondaryAnimation, Widget child) {
+    return SlideTransition(
+      position: Tween<Offset>(begin: const Offset(0, 1), end: Offset.zero)
+          .animate(animation),
+      child: child,
+    );
+  }
+}
+```
+
+For a **faded slide**, wrap `child` in a `FadeTransition` before passing to `SlideTransition`:
+
+```dart
+return SlideTransition(
+  position: Tween<Offset>(begin: const Offset(0, 1), end: Offset.zero)
+      .animate(animation),
+  child: FadeTransition(
+    opacity: Tween<double>(begin: 0, end: 1).animate(animation),
+    child: child,
+  ),
+);
+```
+
+### Slide Direction — Offset Reference
+
+`SlideTransition` uses fractional offsets relative to the screen size. All animations animate **from** `begin` **to** `Offset.zero` (resting position):
+
+| Direction (incoming page enters from…) | `begin` Offset |
+|---|---|
+| Bottom (slides up) | `Offset(0, 1)` |
+| Top (slides down) | `Offset(0, -1)` |
+| Right (slides left) | `Offset(1, 0)` |
+| Left (slides right) | `Offset(-1, 0)` |
+
 ### Adding a New Animation
 
-1. Create a new file in `lib/animations/`.
-2. Define a class implementing `PageAnimationInterface`.
-3. Implement the `animate()` method using Flutter's built-in transition widgets (`SlideTransition`, `FadeTransition`, `ScaleTransition`, `RotationTransition`).
-4. Export the new class from `lib/page_animation_transition.dart` (check the existing barrel export pattern).
-5. Add a demo button in `example/lib/page_one.dart`.
-6. Document the new type in `README.md` and `CHANGELOG.md`.
+1. Create `lib/animations/your_transition_name.dart` (one class per file, `snake_case` filename).
+2. Implement `PageAnimationInterface` with all **four** parameters in `animate()`.
+3. Use only Flutter built-in widgets (`SlideTransition`, `FadeTransition`, `ScaleTransition`, `RotationTransition`). No new dependencies.
+4. Add a demo button in `example/lib/page_one.dart` and the corresponding import.
+5. Document in `README.md` and `CHANGELOG.md`.
+
+> There is no barrel file to update. Do not add an export to `lib/page_animation_transition.dart`.
 
 ---
 
 ## Available Transition Types
 
-| Class | Effect |
-|---|---|
-| `BottomToTopTransition` | Slide from bottom |
-| `TopToBottomTransition` | Slide from top |
-| `LeftToRightTransition` | Slide from left |
-| `RightToLeftTransition` | Slide from right |
-| `FadeAnimationTransition` | Fade in/out |
-| `ScaleAnimationTransition` | Scale in/out |
-| `RotateAnimationTransition` | Rotation |
-| `BottomToTopFadedTransition` | Slide bottom + fade |
-| `TopToBottomFadedTransition` | Slide top + fade |
-| `LeftToRightFadedTransition` | Slide left + fade |
-| `RightToLeftFadedTransition` | Slide right + fade |
+| Class | File | Effect |
+|---|---|---|
+| `BottomToTopTransition` | `bottom_to_top_transition.dart` | Slide from bottom |
+| `TopToBottomTransition` | `top_to_bottom_transition.dart` | Slide from top |
+| `LeftToRightTransition` | `left_to_right_transition.dart` | Slide from left |
+| `RightToLeftTransition` | `right_to_left_transition.dart` | Slide from right |
+| `FadeAnimationTransition` | `fade_animation_transition.dart` | Fade in/out |
+| `ScaleAnimationTransition` | `scale_animation_transition.dart` | Scale in/out |
+| `RotationAnimationTransition` | `rotate_animation_transition.dart` | Rotation |
+| `BottomToTopFadedTransition` | `bottom_to_top_faded_transition.dart` | Slide bottom + fade |
+| `TopToBottomFadedTransition` | `top_to_bottom_faded.dart` | Slide top + fade |
+| `LeftToRightFadedTransition` | `left_to_right_faded_transition.dart` | Slide left + fade |
+| `RightToLeftFadedTransition` | `right_to_left_faded_transition.dart` | Slide right + fade |
+
+---
+
+## Known Quirks & Gotchas
+
+- **`top_to_bottom_faded.dart` filename**: This file is missing the `_transition` suffix that all other faded variants use. This is intentional (it already exists in pub.dev releases). Do **not** rename it — doing so will break all existing consumer imports.
+- **No `transitionDuration` exposed**: `PageRouteBuilder` supports a `transitionDuration` parameter, but `PageAnimationTransition` does not currently expose it. If a caller needs a custom duration they must subclass `PageRouteBuilder` directly. Do not add this unless requested.
+- **`widget_test.dart` is dead code**: `example/test/widget_test.dart` contains the default Flutter counter test, not an animation test. It passes only because it pumps the `MyApp` widget from a non-existent counter template. Do not rely on it for validation.
+
+---
+
+## What NOT To Do
+
+Avoid these common mistakes when modifying this package:
+
+- **Do not add runtime dependencies** to `pubspec.yaml`. The package intentionally has zero third-party dependencies.
+- **Do not change the `animate()` signature** — the interface defines exactly 4 parameters (`context`, `animation`, `secondaryAnimation`, `child`). Adding or removing parameters breaks all existing implementations.
+- **Do not put two animation classes in one file**. One class = one file, always.
+- **Do not add an export/part directive** to `lib/page_animation_transition.dart`. It is a widget file, not a barrel.
+- **Do not rename `top_to_bottom_faded.dart`** to add the `_transition` suffix. It would break consumer imports.
+- **Do not use `!` force-unwrap** unless provably non-null; prefer `??` and `?.`.
 
 ---
 
@@ -137,6 +222,8 @@ flutter analyze
 cd example && flutter analyze
 ```
 
+All code must pass `flutter analyze` with **zero warnings** before committing.
+
 ### Tests
 
 ```bash
@@ -144,7 +231,7 @@ cd example && flutter analyze
 cd example && flutter test
 ```
 
-> **Note**: The existing `example/test/widget_test.dart` is a placeholder smoke test and does not test animation behavior. New tests should be added here or in a dedicated `test/` directory at the package root.
+> The existing `example/test/widget_test.dart` is a placeholder smoke test that does not test animation behavior. New tests should be added here or in a dedicated `test/` directory at the package root.
 
 ### Versioning & Publishing
 
@@ -165,7 +252,7 @@ Before publishing:
 - **Animation classes**: Each animation lives in its own file. Keep them single-responsibility — one class, one file.
 - **No external dependencies**: The package intentionally has zero runtime dependencies beyond the Flutter SDK. Do not add third-party packages to `dependencies` in `pubspec.yaml`.
 - **Linting**: Code must pass `flutter analyze` with zero warnings. The project uses `flutter_lints` (see `analysis_options.yaml`).
-- **Interface compliance**: Every new animation class must implement `PageAnimationInterface`. Do not add optional parameters to `animate()`.
+- **Interface compliance**: Every new animation class must implement `PageAnimationInterface` with the exact 4-parameter `animate()` signature.
 
 ---
 
@@ -181,10 +268,10 @@ Before publishing:
 
 | File | Purpose |
 |---|---|
-| `lib/page_animation_transition.dart` | Package entry point; barrel exports all public types |
+| `lib/page_animation_transition.dart` | Main widget; overrides `buildTransitions` to call the interface |
 | `lib/page_animation_interface.dart` | Abstract contract every animation must satisfy |
 | `lib/animations/*.dart` | Individual animation implementations |
-| `example/lib/page_one.dart` | Best reference for how to use every animation type |
+| `example/lib/page_one.dart` | Best reference for correct imports and usage of every animation |
 | `pubspec.yaml` | Package version, SDK constraints, dependencies |
 | `CHANGELOG.md` | Must be updated with every release |
 | `README.md` | User-facing docs; update when adding new animation types |
