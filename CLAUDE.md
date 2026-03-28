@@ -4,7 +4,7 @@ This file provides guidance for AI assistants working with the `page_animation_t
 
 ## Project Overview
 
-`page_animation_transition` is a lightweight Flutter package (v0.0.9) that provides 11 pre-built animated page transitions. It exposes a single `PageAnimationTransition` widget (which extends `PageRouteBuilder`) and an abstract interface for defining custom transitions.
+`page_animation_transition` is a lightweight Flutter package (v0.1.0) that provides 15 pre-built animated page transitions. It exposes a single `PageAnimationTransition` widget (which extends `PageRouteBuilder`) and an abstract interface for defining custom transitions.
 
 - **Repository**: https://github.com/aayushkedawat/page_animation_transition
 - **License**: MIT
@@ -20,7 +20,7 @@ page_animation_transition/
 ├── lib/                                    # Published package source
 │   ├── page_animation_transition.dart     # Main widget (NOT a barrel file)
 │   ├── page_animation_interface.dart      # Abstract interface
-│   └── animations/                        # 11 animation implementations
+│   └── animations/                        # 15 animation implementations
 │       ├── bottom_to_top_transition.dart
 │       ├── top_to_bottom_transition.dart
 │       ├── left_to_right_transition.dart
@@ -31,7 +31,11 @@ page_animation_transition/
 │       ├── bottom_to_top_faded_transition.dart
 │       ├── top_to_bottom_faded.dart          # ⚠ intentionally missing _transition suffix
 │       ├── left_to_right_faded_transition.dart
-│       └── right_to_left_faded_transition.dart
+│       ├── right_to_left_faded_transition.dart
+│       ├── flip_transition.dart
+│       ├── scale_fade_transition.dart
+│       ├── size_animation_transition.dart
+│       └── platform_adaptive_transition.dart
 ├── example/                                # Runnable Flutter demo app
 │   ├── lib/
 │   │   ├── main.dart                      # App entry point
@@ -67,24 +71,39 @@ abstract class PageAnimationInterface {
 }
 ```
 
-The main widget overrides `buildTransitions` and delegates to the interface:
+The main widget overrides `buildTransitions` and delegates to the interface. It also exposes `curve` and `duration` for convenient customization:
 
 ```dart
 // lib/page_animation_transition.dart
 class PageAnimationTransition extends PageRouteBuilder {
   final Widget page;
   final PageAnimationInterface pageAnimationType;
+  final Curve curve;
 
-  PageAnimationTransition({required this.page, required this.pageAnimationType})
-      : super(pageBuilder: (context, animation, secondaryAnimation) => page);
+  PageAnimationTransition({
+    required this.page,
+    required this.pageAnimationType,
+    this.curve = Curves.linear,
+    Duration duration = const Duration(milliseconds: 300),
+  }) : super(
+          pageBuilder: (context, animation, secondaryAnimation) => page,
+          transitionDuration: duration,
+        );
 
   @override
   Widget buildTransitions(BuildContext context, Animation<double> animation,
       Animation<double> secondaryAnimation, Widget child) {
-    return pageAnimationType.animate(context, animation, secondaryAnimation, child);
+    return pageAnimationType.animate(
+      context,
+      CurvedAnimation(parent: animation, curve: curve),
+      secondaryAnimation,
+      child,
+    );
   }
 }
 ```
+
+The `curve` is applied in `buildTransitions` by wrapping the raw `animation` with `CurvedAnimation` before passing it to `animate()`. This means individual animation classes do not need to know about curves — they always receive a pre-curved animation.
 
 ### Import Pattern
 
@@ -169,14 +188,19 @@ return SlideTransition(
 | `TopToBottomFadedTransition` | `top_to_bottom_faded.dart` | Slide top + fade |
 | `LeftToRightFadedTransition` | `left_to_right_faded_transition.dart` | Slide left + fade |
 | `RightToLeftFadedTransition` | `right_to_left_faded_transition.dart` | Slide right + fade |
+| `FlipTransition` | `flip_transition.dart` | 3D perspective Y-axis flip |
+| `ScaleFadeTransition` | `scale_fade_transition.dart` | Scale + fade combined |
+| `SizeAnimationTransition` | `size_animation_transition.dart` | Expand/collapse via SizeTransition |
+| `PlatformAdaptiveTransition` | `platform_adaptive_transition.dart` | Right-to-left on iOS/macOS; bottom-to-top fade elsewhere |
 
 ---
 
 ## Known Quirks & Gotchas
 
 - **`top_to_bottom_faded.dart` filename**: This file is missing the `_transition` suffix that all other faded variants use. This is intentional (it already exists in pub.dev releases). Do **not** rename it — doing so will break all existing consumer imports.
-- **No `transitionDuration` exposed**: `PageRouteBuilder` supports a `transitionDuration` parameter, but `PageAnimationTransition` does not currently expose it. If a caller needs a custom duration they must subclass `PageRouteBuilder` directly. Do not add this unless requested.
+- **`curve` wrapping happens in `buildTransitions`**: Individual animation classes always receive a `CurvedAnimation`, not the raw `Animation<double>`. Do not apply extra curves inside animation classes.
 - **`widget_test.dart` is dead code**: `example/test/widget_test.dart` contains the default Flutter counter test, not an animation test. It passes only because it pumps the `MyApp` widget from a non-existent counter template. Do not rely on it for validation.
+- **`PlatformAdaptiveTransition` uses `Theme.of(context).platform`**: This is intentional — it works on web and all platforms without needing `dart:io`. Do not switch it to `Platform.isIOS`.
 
 ---
 

@@ -1,12 +1,16 @@
 import 'package:page_animation_transition/animations/bottom_to_top_faded_transition.dart';
 import 'package:page_animation_transition/animations/bottom_to_top_transition.dart';
 import 'package:page_animation_transition/animations/fade_animation_transition.dart';
+import 'package:page_animation_transition/animations/flip_transition.dart';
 import 'package:page_animation_transition/animations/left_to_right_faded_transition.dart';
 import 'package:page_animation_transition/animations/left_to_right_transition.dart';
+import 'package:page_animation_transition/animations/platform_adaptive_transition.dart';
 import 'package:page_animation_transition/animations/right_to_left_faded_transition.dart';
 import 'package:page_animation_transition/animations/right_to_left_transition.dart';
 import 'package:page_animation_transition/animations/rotate_animation_transition.dart';
 import 'package:page_animation_transition/animations/scale_animation_transition.dart';
+import 'package:page_animation_transition/animations/scale_fade_transition.dart';
+import 'package:page_animation_transition/animations/size_animation_transition.dart';
 import 'package:page_animation_transition/animations/top_to_bottom_faded.dart';
 import 'package:page_animation_transition/animations/top_to_bottom_transition.dart';
 import 'package:page_animation_transition/page_animation_transition.dart';
@@ -106,6 +110,34 @@ class PageOne extends StatelessWidget {
                       pageAnimationType: LeftToRightFadedTransition()));
                 },
                 child: const Text('Left to Right Faded')),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).push(PageAnimationTransition(
+                      page: const PageTwo(),
+                      pageAnimationType: FlipTransition()));
+                },
+                child: const Text('Flip')),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).push(PageAnimationTransition(
+                      page: const PageTwo(),
+                      pageAnimationType: ScaleFadeTransition()));
+                },
+                child: const Text('Scale + Fade')),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).push(PageAnimationTransition(
+                      page: const PageTwo(),
+                      pageAnimationType: SizeAnimationTransition()));
+                },
+                child: const Text('Size')),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).push(PageAnimationTransition(
+                      page: const PageTwo(),
+                      pageAnimationType: PlatformAdaptiveTransition()));
+                },
+                child: const Text('Platform Adaptive')),
           ],
         ),
       ),
