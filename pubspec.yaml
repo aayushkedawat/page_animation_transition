@@ -1,5 +1,5 @@
 name: page_animation_transition
-description: Add customizable Flutter page route transitions — slide, fade, scale, rotate, size, and diagonal — with adjustable duration and curves.
+description: Add customizable Flutter page transitions — slide, fade, scale, rotate, size, diagonal — with Navigator, named routes, or go_router.
 version: 0.1.0
 homepage: https://github.com/aayushkedawat/page_animation_transition
 repository: https://github.com/aayushkedawat/page_animation_transition
@@ -21,6 +21,9 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.2
+  # Used only in tests to verify PageAnimationTransitionPage interoperates
+  # with go_router; not required by consumers of this package.
+  go_router: ^18.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

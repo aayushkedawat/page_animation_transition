@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:page_animation_transition/page_animation_interface.dart';
 
 export 'package:page_animation_transition/page_animation_interface.dart';
+export 'package:page_animation_transition/page_animation_transition_page.dart';
 export 'package:page_animation_transition/animations/bottom_left_to_top_right_transition.dart';
 export 'package:page_animation_transition/animations/bottom_right_to_top_left_transition.dart';
 export 'package:page_animation_transition/animations/bottom_to_top_faded_transition.dart';

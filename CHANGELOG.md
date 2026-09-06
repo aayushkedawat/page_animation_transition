@@ -40,3 +40,10 @@
 * Rewrote the README with a features overview, a full transition reference
   table, an FAQ, and pub.dev score badges; added `homepage`, `issue_tracker`,
   and `topics` to `pubspec.yaml` for better pub.dev discoverability
+* Added `PageAnimationTransitionPage`, a `Page` implementation for
+  Navigator 2.0 / declarative routers (go_router, auto_route, Beamer,
+  routemaster, VRouter) so every transition type and the duration/curve
+  customization now work outside of the imperative `Navigator` API too
+* Added a runnable go_router example (`example/lib/go_router_main.dart`) and
+  tests proving `PageAnimationTransitionPage` works with go_router and with
+  `Navigator.push`

@@ -9,12 +9,14 @@
 
 **A lightweight Flutter package for adding beautiful, customizable page route
 transition animations** — slide, fade, scale, rotate, size, and diagonal
-transitions — to `Navigator.push` and named routes, with full control over
-duration and easing curves. No boilerplate `PageRouteBuilder` code required.
+transitions — to `Navigator.push`, named routes, and declarative routers like
+**go_router**, with full control over duration and easing curves. No
+boilerplate `PageRouteBuilder` or `Page` code required.
 
-If you're searching for a **Flutter page transition animation package**,
-**custom Flutter route transition**, or a simple way to **animate Navigator
-push/pop transitions**, this package gets you there in one line of code.
+If you're searching for a **Flutter page transition animation package**, a
+**custom Flutter route transition**, a way to **animate Navigator push/pop
+transitions**, or **custom page transitions for go_router**, this package
+gets you there in one line of code.
 
 ## Table of contents
 
@@ -24,6 +26,7 @@ push/pop transitions**, this package gets you there in one line of code.
 - [Available transitions](#available-transitions)
 - [Customizing duration and curves](#customizing-duration-and-curves)
 - [Using with named routes](#using-with-named-routes)
+- [Using with go_router and other Router-based navigation](#using-with-go_router-and-other-router-based-navigation)
 - [Example app](#example-app)
 - [FAQ](#faq)
 - [Contributing](#contributing)
@@ -39,11 +42,13 @@ push/pop transitions**, this package gets you there in one line of code.
 - **Fully customizable timing** — set `duration`, `reverseDuration`, `curve`,
   and `reverseCurve` per navigation call, so transitions match your app's
   motion design instead of a fixed default.
-- **Works with both imperative and named routing** — use it directly with
-  `Navigator.push` or return it from `onGenerateRoute` for named routes.
+- **Works with every routing strategy** — imperative `Navigator.push`, named
+  routes via `onGenerateRoute`, and declarative Navigator 2.0 routers such as
+  **go_router**, **auto_route**, **Beamer**, **routemaster**, and **VRouter**
+  via the bundled `PageAnimationTransitionPage`.
 - **Zero extra dependencies** — built entirely on Flutter's own
-  `PageRouteBuilder`, `Tween`, and transition widgets, so it stays small and
-  has nothing extra to break or bloat your app.
+  `PageRouteBuilder`, `Page`, `Tween`, and transition widgets, so it stays
+  small and has nothing extra to break or bloat your app.
 - **Extensible** — implement `PageAnimationInterface` to plug in your own
   custom transition alongside the built-in ones.
 
@@ -191,6 +196,62 @@ Then navigate as usual:
 Navigator.pushNamed(context, '/pageTwo');
 ```
 
+## Using with go_router and other Router-based navigation
+
+For apps built on Flutter's declarative Navigator 2.0 `Router` API — including
+**go_router**, **auto_route**, **Beamer**, **routemaster**, and **VRouter** —
+use `PageAnimationTransitionPage` instead of `PageAnimationTransition`. It's a
+standard [`Page`](https://api.flutter.dev/flutter/widgets/Page-class.html)
+implementation, so it plugs into any router that builds a list of `Page`s,
+with no dependency on go_router (or any other router package) required.
+
+With go_router:
+
+```dart
+GoRoute(
+  path: '/pageTwo',
+  pageBuilder: (context, state) => PageAnimationTransitionPage(
+    key: state.pageKey,
+    child: const PageTwo(),
+    pageAnimationType: LeftToRightFadedTransition(),
+    duration: const Duration(milliseconds: 400),
+  ),
+),
+```
+
+With a raw `Navigator(pages: ...)` (or any other `Router` delegate that
+consumes `Page`s):
+
+```dart
+Navigator(
+  pages: [
+    PageAnimationTransitionPage(
+      key: const ValueKey('pageOne'),
+      child: const PageOne(),
+      pageAnimationType: FadeAnimationTransition(),
+    ),
+    if (showPageTwo)
+      PageAnimationTransitionPage(
+        key: const ValueKey('pageTwo'),
+        child: const PageTwo(),
+        pageAnimationType: LeftToRightTransition(),
+      ),
+  ],
+  onDidRemovePage: (page) => setState(() => showPageTwo = false),
+);
+```
+
+`PageAnimationTransitionPage` supports the same `duration`, `reverseDuration`,
+`curve`, and `reverseCurve` customization as `PageAnimationTransition` (see
+[Customizing duration and curves](#customizing-duration-and-curves)), plus
+`maintainState`, `fullscreenDialog`, `opaque`, `barrierDismissible`,
+`barrierColor`, and `barrierLabel` for full parity with `MaterialPage` and
+go_router's `CustomTransitionPage`.
+
+A runnable go_router example lives in
+[`example/lib/go_router_main.dart`](example/lib/go_router_main.dart) — run it
+with `flutter run -t lib/go_router_main.dart` from the `example/` directory.
+
 ## Example app
 
 A complete, runnable example with a button for every transition (including a
@@ -200,6 +261,14 @@ this repository and run:
 ```
 cd example
 flutter run
+```
+
+A second entry point, [`example/lib/go_router_main.dart`](example/lib/go_router_main.dart),
+demonstrates `PageAnimationTransitionPage` wired up with go_router:
+
+```
+cd example
+flutter run -t lib/go_router_main.dart
 ```
 
 ## FAQ
@@ -220,10 +289,20 @@ Yes — pass `curve` and, if you want a different easing on pop, `reverseCurve`.
 Yes — implement `PageAnimationInterface`'s single `animate` method and pass an
 instance of your class as `pageAnimationType`.
 
+**Does this work with go_router?**
+Yes — use `PageAnimationTransitionPage` (a standard Flutter `Page`) as the
+return value of a `GoRoute`'s `pageBuilder`. See
+[Using with go_router and other Router-based navigation](#using-with-go_router-and-other-router-based-navigation).
+
+**Does this work with auto_route, Beamer, routemaster, or VRouter?**
+Yes — `PageAnimationTransitionPage` is a plain `Page<T>` with no dependency on
+go_router, so it works with any router that builds a list of `Page`s,
+including auto_route, Beamer, routemaster, and VRouter.
+
 **Does this replace `Navigator` or `go_router`?**
-No — `PageAnimationTransition` is a `PageRouteBuilder`, so it plugs directly
-into Flutter's standard imperative `Navigator` API and `onGenerateRoute`. It
-doesn't change how you manage routes, only how they animate.
+No — `PageAnimationTransition` (imperative) and `PageAnimationTransitionPage`
+(declarative) plug directly into Flutter's existing routing APIs. Neither
+changes how you manage routes, only how they animate.
 
 ## Contributing
 

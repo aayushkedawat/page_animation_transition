@@ -36,6 +36,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   page_animation_transition:
     path: ../
+  go_router: ^18.0.0
 
 dev_dependencies:
   flutter_test:
