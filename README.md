@@ -11,6 +11,12 @@ dependencies:
 
 ```
 
+A single import gives you `PageAnimationTransition` and every transition type:
+
+```
+import 'package:page_animation_transition/page_animation_transition.dart';
+```
+
 Below are some examples:
 ```
 Navigator.of(context).push(PageAnimationTransition(page: const PageTwo(), pageAnimationType: BottomToTopTransition()));
@@ -34,7 +40,42 @@ Navigator.of(context).push(PageAnimationTransition(page: const PageTwo(), pageAn
 Navigator.of(context).push(PageAnimationTransition(page: const PageTwo(), pageAnimationType: RightToLeftFadedTransition()));
 
 Navigator.of(context).push(PageAnimationTransition(page: const PageTwo(), pageAnimationType: LeftToRightFadedTransition()));
+
+Navigator.of(context).push(PageAnimationTransition(page: const PageTwo(), pageAnimationType: ScaleFadedTransition()));
+
+Navigator.of(context).push(PageAnimationTransition(page: const PageTwo(), pageAnimationType: RotationFadedTransition()));
+
+Navigator.of(context).push(PageAnimationTransition(page: const PageTwo(), pageAnimationType: SizeAnimationTransition()));
+
+Navigator.of(context).push(PageAnimationTransition(page: const PageTwo(), pageAnimationType: TopLeftToBottomRightTransition()));
+
+Navigator.of(context).push(PageAnimationTransition(page: const PageTwo(), pageAnimationType: BottomRightToTopLeftTransition()));
+
+Navigator.of(context).push(PageAnimationTransition(page: const PageTwo(), pageAnimationType: TopRightToBottomLeftTransition()));
+
+Navigator.of(context).push(PageAnimationTransition(page: const PageTwo(), pageAnimationType: BottomLeftToTopRightTransition()));
 ```
+
+### Customizing duration and curve
+
+`PageAnimationTransition` accepts optional `duration`, `reverseDuration`, `curve` and
+`reverseCurve` parameters so you are not limited to the default timing:
+
+```
+Navigator.of(context).push(PageAnimationTransition(
+  page: const PageTwo(),
+  pageAnimationType: FadeAnimationTransition(),
+  duration: const Duration(milliseconds: 800),
+  reverseDuration: const Duration(milliseconds: 400),
+  curve: Curves.easeInOutBack,
+  reverseCurve: Curves.easeIn,
+));
+```
+
+* `duration` — how long the forward (push) transition takes. Defaults to 300ms.
+* `reverseDuration` — how long the reverse (pop) transition takes. Defaults to `duration`.
+* `curve` — the easing curve applied to the transition. Defaults to `Curves.linear`.
+* `reverseCurve` — the easing curve used when popping the route. Defaults to `curve`.
 
 ### Usage for predefined routes
 
@@ -81,3 +122,17 @@ bottomToTopFaded
 leftToRightFaded
 
 rightToLeftFaded
+
+scaleFaded
+
+rotateFaded
+
+size
+
+topLeftToBottomRight
+
+bottomRightToTopLeft
+
+topRightToBottomLeft
+
+bottomLeftToTopRight

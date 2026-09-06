@@ -1,0 +1,22 @@
+import 'package:flutter/material.dart';
+import 'package:page_animation_transition/page_animation_interface.dart';
+
+class SizeAnimationTransition implements PageAnimationInterface {
+  final Axis axis;
+  final double axisAlignment;
+
+  SizeAnimationTransition({this.axis = Axis.vertical, this.axisAlignment = 0});
+
+  @override
+  Widget animate(BuildContext context, Animation<double> animation,
+      Animation<double> secondaryAnimation, Widget child) {
+    return Align(
+      child: SizeTransition(
+        sizeFactor: Tween<double>(begin: 0, end: 1).animate(animation),
+        axis: axis,
+        axisAlignment: axisAlignment,
+        child: child,
+      ),
+    );
+  }
+}
