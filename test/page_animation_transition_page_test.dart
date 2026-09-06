@@ -39,7 +39,8 @@ void main() {
           builder: (context, state) => Scaffold(
             body: Center(
               child: ElevatedButton(
-                onPressed: () => context.go('/two'),
+                // push (not go) so the route stack has something to pop.
+                onPressed: () => context.push('/two'),
                 child: const Text('Go'),
               ),
             ),
@@ -49,8 +50,15 @@ void main() {
           path: '/two',
           pageBuilder: (context, state) => PageAnimationTransitionPage(
             key: state.pageKey,
-            child: const Scaffold(body: Text('Second Page')),
             pageAnimationType: LeftToRightTransition(),
+            child: Scaffold(
+              body: Center(
+                child: ElevatedButton(
+                  onPressed: () => context.pop(),
+                  child: const Text('Second Page'),
+                ),
+              ),
+            ),
           ),
         ),
       ],
@@ -65,6 +73,12 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Second Page'), findsOneWidget);
+
+    await tester.tap(find.text('Second Page'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Go'), findsOneWidget);
+    expect(find.text('Second Page'), findsNothing);
   });
 
   testWidgets('PageAnimationTransitionPage respects custom duration and curve',

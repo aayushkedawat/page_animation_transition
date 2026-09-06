@@ -24,7 +24,9 @@ class GoRouterExampleApp extends StatelessWidget {
           ),
           body: Center(
             child: ElevatedButton(
-              onPressed: () => context.go('/two'),
+              // push (not go) so '/two' is added on top of the stack and
+              // context.pop() on the next page has something to pop.
+              onPressed: () => context.push('/two'),
               child: const Text('Go to page two'),
             ),
           ),
