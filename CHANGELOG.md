@@ -22,7 +22,7 @@
 
 * Updated Readme
 
-## 0.1.0
+## 1.1.0
 
 * Added 7 new transition types: `ScaleFadedTransition`, `RotationFadedTransition`,
   `SizeAnimationTransition`, `TopLeftToBottomRightTransition`,
