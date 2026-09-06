@@ -1,7 +1,13 @@
 name: page_animation_transition
-description: Using this package, you can add beautiful page transitions to your application.
+description: Add customizable Flutter page route transitions — slide, fade, scale, rotate, size, and diagonal — with adjustable duration and curves.
 version: 0.1.0
+homepage: https://github.com/aayushkedawat/page_animation_transition
 repository: https://github.com/aayushkedawat/page_animation_transition
+issue_tracker: https://github.com/aayushkedawat/page_animation_transition/issues
+topics:
+  - animation
+  - navigation
+  - routing
 
 environment:
   sdk: ">=2.17.0 <4.0.0"

@@ -37,3 +37,6 @@
   duration/curve customization
 * Raised minimum SDK constraints (Dart `>=2.17.0 <4.0.0`, Flutter `>=3.0.0`)
   and upgraded `flutter_lints` to `^3.0.2`
+* Rewrote the README with a features overview, a full transition reference
+  table, an FAQ, and pub.dev score badges; added `homepage`, `issue_tracker`,
+  and `topics` to `pubspec.yaml` for better pub.dev discoverability
