@@ -14,6 +14,9 @@ class SizeAnimationTransition implements PageAnimationInterface {
       child: SizeTransition(
         sizeFactor: Tween<double>(begin: 0, end: 1).animate(animation),
         axis: axis,
+        // ignore: deprecated_member_use
+        // `alignment` isn't available on the Flutter >=3.0.0 versions this
+        // package still supports.
         axisAlignment: axisAlignment,
         child: child,
       ),

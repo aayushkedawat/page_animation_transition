@@ -37,9 +37,8 @@ class PageAnimationTransition extends PageRouteBuilder {
     Duration? reverseDuration,
     this.curve = Curves.linear,
     this.reverseCurve,
-    RouteSettings? settings,
+    super.settings,
   }) : super(
-          settings: settings,
           transitionDuration: duration,
           reverseTransitionDuration: reverseDuration ?? duration,
           pageBuilder: (

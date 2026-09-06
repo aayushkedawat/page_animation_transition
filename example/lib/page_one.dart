@@ -3,7 +3,7 @@ import 'page_two.dart';
 import 'package:flutter/material.dart';
 
 class PageOne extends StatelessWidget {
-  const PageOne({Key? key}) : super(key: key);
+  const PageOne({super.key});
 
   @override
   Widget build(BuildContext context) {
