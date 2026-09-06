@@ -3,7 +3,6 @@
 [![pub package](https://img.shields.io/pub/v/page_animation_transition.svg)](https://pub.dev/packages/page_animation_transition)
 [![pub points](https://img.shields.io/pub/points/page_animation_transition)](https://pub.dev/packages/page_animation_transition/score)
 [![pub likes](https://img.shields.io/pub/likes/page_animation_transition)](https://pub.dev/packages/page_animation_transition/score)
-[![pub popularity](https://img.shields.io/pub/popularity/page_animation_transition)](https://pub.dev/packages/page_animation_transition/score)
 [![License: MIT](https://img.shields.io/github/license/aayushkedawat/page_animation_transition)](LICENSE)
 [![platform](https://img.shields.io/badge/platform-flutter-02569B?logo=flutter)](https://flutter.dev)
 
