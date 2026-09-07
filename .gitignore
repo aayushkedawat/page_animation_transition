@@ -31,6 +31,7 @@
 build/
 
 # This is a library package, not an application: don't lock consumers to
-# the versions resolved on a contributor's machine.
+# the versions resolved on a contributor's machine. Anchored to the repo
+# root only — example/pubspec.lock is a separate app and stays committed.
 # See https://dart.dev/guides/libraries/private-files#pubspeclock
-pubspec.lock
+/pubspec.lock
