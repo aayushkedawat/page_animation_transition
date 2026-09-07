@@ -1,6 +1,6 @@
 name: page_animation_transition
 description: Add customizable Flutter page transitions — slide, fade, scale, rotate, size, diagonal — with Navigator, named routes, or go_router.
-version: 1.1.0
+version: 1.1.1
 homepage: https://github.com/aayushkedawat/page_animation_transition
 repository: https://github.com/aayushkedawat/page_animation_transition
 issue_tracker: https://github.com/aayushkedawat/page_animation_transition/issues
