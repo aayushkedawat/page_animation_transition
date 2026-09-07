@@ -47,3 +47,9 @@
 * Added a runnable go_router example (`example/lib/go_router_main.dart`) and
   tests proving `PageAnimationTransitionPage` works with go_router and with
   `Navigator.push`
+
+## 1.1.1
+
+* Added dartdoc comments to every public class, field, constructor, and
+  method, and enabled the `public_member_api_docs` lint to keep future
+  public API documented — fixes pub.dev's dartdoc coverage score
