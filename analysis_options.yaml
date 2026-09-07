@@ -1,4 +1,10 @@
 include: package:flutter_lints/flutter.yaml
 
+linter:
+  rules:
+    # Keep the public API documented so pub.dev's dartdoc coverage score
+    # (and IDE tooltips) stay accurate as the package grows.
+    - public_member_api_docs
+
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options

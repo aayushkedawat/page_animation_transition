@@ -24,12 +24,34 @@ export 'package:page_animation_transition/animations/top_right_to_bottom_left_tr
 export 'package:page_animation_transition/animations/top_to_bottom_faded.dart';
 export 'package:page_animation_transition/animations/top_to_bottom_transition.dart';
 
+/// A [PageRouteBuilder] that animates [page] in and out using
+/// [pageAnimationType], for use with the imperative `Navigator` API
+/// (`Navigator.push`, `onGenerateRoute`).
+///
+/// For Navigator 2.0 / declarative routers (go_router and similar), use
+/// [PageAnimationTransitionPage] instead.
 class PageAnimationTransition extends PageRouteBuilder {
+  /// The page to display once the transition completes.
   final Widget page;
+
+  /// The transition strategy used to animate [page] in and out.
   final PageAnimationInterface pageAnimationType;
+
+  /// The easing curve applied to the forward (push) transition.
+  ///
+  /// Defaults to [Curves.linear].
   final Curve curve;
+
+  /// The easing curve applied when popping the route.
+  ///
+  /// Defaults to [curve] if not set.
   final Curve? reverseCurve;
 
+  /// Creates a route that shows [page] using the [pageAnimationType]
+  /// transition.
+  ///
+  /// [duration] and [reverseDuration] control how long the forward and
+  /// reverse transitions take; [reverseDuration] defaults to [duration].
   PageAnimationTransition({
     required this.page,
     required this.pageAnimationType,
@@ -49,6 +71,8 @@ class PageAnimationTransition extends PageRouteBuilder {
               page,
         );
 
+  /// Builds the transition by delegating to [pageAnimationType], after
+  /// applying [curve]/[reverseCurve] to the incoming animations.
   @override
   Widget buildTransitions(BuildContext context, Animation<double> animation,
       Animation<double> secondaryAnimation, Widget child) {
