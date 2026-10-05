@@ -314,6 +314,14 @@ If this package saved you time, consider:
   it helps other Flutter developers discover the package.
 - [Buying me a coffee on Ko-fi](https://ko-fi.com/aayoush) if you'd like to
   support ongoing maintenance and new features.
+- [Sponsoring me on GitHub](https://github.com/sponsors/aayushkedawat) to fund
+  bug fixes, documentation and keeping up with Flutter releases.
+
+### Backers
+
+<!-- sponsors -->
+_No backers yet. Be the first._
+<!-- /sponsors -->
 
 ## Contributing
 
