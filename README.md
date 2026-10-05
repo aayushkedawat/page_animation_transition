@@ -6,7 +6,6 @@
 [![License: MIT](https://img.shields.io/github/license/aayushkedawat/page_animation_transition)](LICENSE)
 [![platform](https://img.shields.io/badge/platform-flutter-02569B?logo=flutter)](https://flutter.dev)
 [![GitHub stars](https://img.shields.io/github/stars/aayushkedawat/page_animation_transition?style=social)](https://github.com/aayushkedawat/page_animation_transition/stargazers)
-[![ko-fi](https://img.shields.io/badge/support-ko--fi-FF5E5B?logo=ko-fi&logoColor=white)](https://ko-fi.com/aayoush)
 
 **A lightweight Flutter package for adding beautiful, customizable page route
 transition animations** — slide, fade, scale, rotate, size, and diagonal
@@ -312,8 +311,6 @@ If this package saved you time, consider:
 
 - Starring the [repository on GitHub](https://github.com/aayushkedawat/page_animation_transition) —
   it helps other Flutter developers discover the package.
-- [Buying me a coffee on Ko-fi](https://ko-fi.com/aayoush) if you'd like to
-  support ongoing maintenance and new features.
 - [Sponsoring me on GitHub](https://github.com/sponsors/aayushkedawat) to fund
   bug fixes, documentation and keeping up with Flutter releases.
 
